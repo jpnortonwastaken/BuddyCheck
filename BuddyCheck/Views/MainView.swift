@@ -12,12 +12,15 @@ struct MainView: View {
     
     var body: some View {
         VStack(spacing: 16) {
+            
+            // UserHeaderView
             if let user = viewModel.currentUser {
                 UserHeaderView(user: user, logoutAction: {
                     viewModel.logOutUser()
                 })
             }
             
+            // Projects List
             ScrollView {
                 VStack(spacing: 24) {
                     ForEach(viewModel.projects) { project in
