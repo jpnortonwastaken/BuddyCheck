@@ -44,7 +44,7 @@ struct ProfilePictureView: View {
             .scaledToFit()
             .clipShape(Circle())
             .frame(width: size, height: size)
-            .foregroundColor(.gray)
+            .foregroundColor(Color.customGreyColorTextWeak)
     }
 }
 

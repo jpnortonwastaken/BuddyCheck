@@ -61,17 +61,15 @@ struct ProjectView: View {
                 }
             }
             
-            Button {
-                // Check in logic here
-            } label: {
-                Text("Check In")
-                    .font(.headline)
-                    .foregroundColor(Color.customButtonTextColor)
-            }
-            .frame(maxWidth: .infinity)
-            .padding(.vertical, 16)
-            .background(Color.customButtonBackgroundColor)
-            .cornerRadius(20)
+            CustomButton(
+                text: "Check In",
+                cornerRadius: 20,
+                paddingVertical: 16,
+                fullWidth: true,
+                action: {
+                    //
+                }
+            )
         }
         .padding(.horizontal, 20)
         .padding(.vertical, 16)
