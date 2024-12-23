@@ -46,24 +46,24 @@ struct ProjectView: View {
                                         .foregroundColor(Color.green)
                                         .padding(.trailing, 4)
                                 } else {
-                                    Image(systemName: "plus.circle.fill")
-                                        .resizable()
-                                        .frame(width: 26, height: 26)
-                                        .foregroundColor(Color.red)
-                                        .rotationEffect(.degrees(45))
-                                        .padding(.trailing, 4)
+//                                    Image(systemName: "plus.circle.fill")
+//                                        .resizable()
+//                                        .frame(width: 26, height: 26)
+//                                        .foregroundColor(Color.red)
+//                                        .rotationEffect(.degrees(45))
+//                                        .padding(.trailing, 4)
                                 }
                             }
                             .padding(.horizontal, 8)
                             .padding(.vertical, 8)
                             .frame(maxWidth: .infinity, minHeight: 40) // Equal width and consistent height
                             .background(
-                                hasCheckedInToday(collaborator.checkins) ? Color.green.quaternary : Color.red.quaternary
+                                hasCheckedInToday(collaborator.checkins) ? Color.customGreenQuaternary : Color.customGreyColorSuperWeak
                             )
                             .cornerRadius(.infinity)
                             .overlay(
                                 RoundedRectangle(cornerRadius: .infinity)
-                                    .stroke(hasCheckedInToday(collaborator.checkins) ? Color.green : Color.red, lineWidth: 1)
+                                    .stroke(hasCheckedInToday(collaborator.checkins) ? Color.green : Color.customGreyColorTextStrong, lineWidth: 1)
                             )
                         }
                     }

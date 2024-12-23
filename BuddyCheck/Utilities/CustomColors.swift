@@ -8,73 +8,64 @@
 import SwiftUI
 
 extension Color {
-    static let customDynamicBackgroundColor = Color(UIColor { traitCollection in
-        if traitCollection.userInterfaceStyle == .dark {
-            let greyValue = 0.1
-            return UIColor(  // Dark mode
-                red: greyValue,
-                green: greyValue,
-                blue: greyValue + 0.01,
-                alpha: 1
-            )
-        } else {
-            return UIColor.white // Light mode
-        }
-    })
+    init(lightMode: UIColor, darkMode: UIColor) {
+        self.init(UIColor { traitCollection in
+            return traitCollection.userInterfaceStyle == .dark ? darkMode : lightMode
+        })
+    }
+}
+
+extension Color {
+    static let customDynamicBackgroundColor = Color(
+        lightMode: UIColor.white,
+        darkMode: UIColor(
+            red: 0.1,
+            green: 0.1,
+            blue: 0.11,
+            alpha: 1
+        )
+    )
     
-    static let customTextColor = Color(UIColor { traitCollection in
-        if traitCollection.userInterfaceStyle == .dark {
-            return UIColor.white // Dark mode
-        } else {
-            return UIColor.black // Light mode
-        }
-    })
+    static let customTextColor = Color(
+        lightMode: UIColor.black,
+        darkMode: UIColor.white
+    )
     
-    static let customButtonTextColor = Color(UIColor { traitCollection in
-        if traitCollection.userInterfaceStyle == .dark {
-            return UIColor.black // Dark mode
-        } else {
-            return UIColor.white // Light mode
-        }
-    })
+    static let customButtonTextColor = Color(
+        lightMode: UIColor.white,
+        darkMode: UIColor.black
+    )
     
-    static let customButtonBackgroundColor = Color(UIColor { traitCollection in
-        if traitCollection.userInterfaceStyle == .dark {
-            return UIColor.white // Dark mode
-        } else {
-            return UIColor.black // Light mode
-        }
-    })
+    static let customButtonBackgroundColor = Color(
+        lightMode: UIColor.black,
+        darkMode: UIColor.white
+    )
     
-    static let customGreyColorBackground = Color(UIColor { traitCollection in
-        if traitCollection.userInterfaceStyle == .dark {
-            return UIColor.systemGray5 // Dark mode
-        } else {
-            return UIColor.systemGray6 // Light mode
-        }
-    })
+    static let customGreyColorBackground = Color(
+        lightMode: UIColor.systemGray6,
+        darkMode: UIColor.systemGray5
+    )
     
-    static let customGreyColorTextStrong = Color(UIColor { traitCollection in
-        if traitCollection.userInterfaceStyle == .dark {
-            return UIColor.secondaryLabel // Dark mode
-        } else {
-            return UIColor.secondaryLabel // Light mode
-        }
-    })
+    static let customGreyColorTextStrong = Color(
+        lightMode: UIColor.secondaryLabel,
+        darkMode: UIColor.secondaryLabel
+    )
     
-    static let customGreyColorTextWeak = Color(UIColor { traitCollection in
-        if traitCollection.userInterfaceStyle == .dark {
-            return UIColor.systemGray2 // Dark mode
-        } else {
-            return UIColor.systemGray2 // Light mode
-        }
-    })
+    static let customGreyColorTextWeak = Color(
+        lightMode: UIColor.systemGray2,
+        darkMode: UIColor.systemGray2
+    )
     
-    static let customGreyColorSuperWeak = Color(UIColor { traitCollection in
-        if traitCollection.userInterfaceStyle == .dark {
-            return UIColor.systemGray3 // Dark mode
-        } else {
-            return UIColor.systemGray4 // Light mode
-        }
-    })
+    static let customGreyColorSuperWeak = Color(
+        lightMode: UIColor.systemGray4,
+        darkMode: UIColor.systemGray3
+    )
+    
+    static let customGreenQuaternary = Color(
+        UIColor.systemGreen.withAlphaComponent(0.2)
+    )
+    
+    static let customRedQuaternary = Color(
+        UIColor.systemRed.withAlphaComponent(0.2)
+    )
 }
