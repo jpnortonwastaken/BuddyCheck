@@ -12,5 +12,5 @@ struct Checkin: Identifiable, Codable, Hashable {
     var id: UUID
     var project_id: UUID
     var user_id: UUID
-    var datetime: String
+    var created_at: String
 }

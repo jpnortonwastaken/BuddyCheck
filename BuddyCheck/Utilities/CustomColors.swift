@@ -69,4 +69,12 @@ extension Color {
             return UIColor.systemGray2 // Light mode
         }
     })
+    
+    static let customGreyColorSuperWeak = Color(UIColor { traitCollection in
+        if traitCollection.userInterfaceStyle == .dark {
+            return UIColor.systemGray3 // Dark mode
+        } else {
+            return UIColor.systemGray4 // Light mode
+        }
+    })
 }

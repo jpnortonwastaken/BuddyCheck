@@ -9,12 +9,16 @@ import SwiftUI
 
 struct ProjectView: View {
     let project: Project
-    let hasCheckedInToday: ([Checkin]) -> Bool
+    let checkIn: (Project) -> Void
+    let unCheckIn: (Project) -> Void
+    let getCurrentUserID: () -> UUID?
+    
+    @State private var isCheckedIn = false
     
     var body: some View {
         VStack(alignment: .leading, spacing: 20) {
             VStack(alignment: .leading) {
-                Text(project.name)
+                Text(project.title)
                     .font(.title2)
                     .bold()
                 
@@ -42,10 +46,11 @@ struct ProjectView: View {
                                         .foregroundColor(Color.green)
                                         .padding(.trailing, 4)
                                 } else {
-                                    Image(systemName: "x.circle.fill")
+                                    Image(systemName: "plus.circle.fill")
                                         .resizable()
                                         .frame(width: 26, height: 26)
                                         .foregroundColor(Color.red)
+                                        .rotationEffect(.degrees(45))
                                         .padding(.trailing, 4)
                                 }
                             }
@@ -56,18 +61,29 @@ struct ProjectView: View {
                                 hasCheckedInToday(collaborator.checkins) ? Color.green.quaternary : Color.red.quaternary
                             )
                             .cornerRadius(.infinity)
+                            .overlay(
+                                RoundedRectangle(cornerRadius: .infinity)
+                                    .stroke(hasCheckedInToday(collaborator.checkins) ? Color.green : Color.red, lineWidth: 1)
+                            )
                         }
                     }
                 }
             }
             
             CustomButton(
-                text: "Check In",
+                text: isCheckedIn ? "Uncheck In" : "Check In",
+                foregroundColor: isCheckedIn ? Color.customGreyColorTextStrong : Color.customButtonTextColor,
+                backgroundColor: isCheckedIn ? Color.customGreyColorSuperWeak : Color.customButtonBackgroundColor,
                 cornerRadius: 20,
                 paddingVertical: 16,
                 fullWidth: true,
                 action: {
-                    //
+                    if isCheckedIn {
+                        unCheckIn(project)
+                    } else {
+                        checkIn(project)
+                    }
+                    isCheckedIn.toggle()
                 }
             )
         }
@@ -75,6 +91,13 @@ struct ProjectView: View {
         .padding(.vertical, 16)
         .background(Color.customGreyColorBackground)
         .cornerRadius(20)
+        .onAppear {
+            if let userId = getCurrentUserID() {
+                isCheckedIn = project.collaborators.contains { collaborator in
+                    collaborator.user.id == userId && hasCheckedInToday(collaborator.checkins)
+                }
+            }
+        }
     }
     
     // Helper function to chunk array
@@ -83,9 +106,26 @@ struct ProjectView: View {
             Array(array[$0..<min($0 + size, array.count)])
         }
     }
+    
+    // Helper function to check if there is a checkin for today
+    func hasCheckedInToday(_ checkins: [Checkin]) -> Bool {
+        let isoFormatter = ISO8601DateFormatter()
+        let today = Calendar.current.startOfDay(for: Date())
+        return checkins.contains { checkin in
+            if let date = isoFormatter.date(from: checkin.created_at) {
+                return Calendar.current.isDate(date, inSameDayAs: today)
+            }
+            return false
+        }
+    }
 }
 
 #Preview {
-    ProjectView(project: Project.mockProject1, hasCheckedInToday: MockFunctions.mockHasCheckedInToday(_:))
-        .padding(16)
+    ProjectView(
+        project: Project.mockProject1,
+        checkIn: MockFunctions.mockCheckIn,
+        unCheckIn: MockFunctions.mockUnCheckIn,
+        getCurrentUserID: MockFunctions.mockGetCurrentUserID
+    )
+    .padding(16)
 }

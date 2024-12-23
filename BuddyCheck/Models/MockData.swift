@@ -47,7 +47,7 @@ extension Checkin {
             id: UUID(uuidString: "00000000-0000-0000-0000-000000000001")!,
             project_id: UUID(uuidString: "00000000-0000-0000-0000-000000000002")!, // Project 1
             user_id: UUID(uuidString: "00000000-0000-0000-0000-000000000001")!, // Alice
-            datetime: ISO8601DateFormatter().string(from: Date())
+            created_at: ISO8601DateFormatter().string(from: Date())
         )
     }
     
@@ -56,7 +56,7 @@ extension Checkin {
             id: UUID(uuidString: "00000000-0000-0000-0000-000000000002")!,
             project_id: UUID(uuidString: "00000000-0000-0000-0000-000000000001")!, // Project 2
             user_id: UUID(uuidString: "00000000-0000-0000-0000-000000000002")!, // Bob
-            datetime: ISO8601DateFormatter().string(from: Date())
+            created_at: ISO8601DateFormatter().string(from: Date())
         )
     }
     
@@ -65,7 +65,7 @@ extension Checkin {
             id: UUID(uuidString: "00000000-0000-0000-0000-000000000003")!,
             project_id: UUID(uuidString: "00000000-0000-0000-0000-000000000001")!, // Project 1
             user_id: UUID(uuidString: "00000000-0000-0000-0000-000000000003")!, // Charlie
-            datetime: ISO8601DateFormatter().string(from: Date())
+            created_at: ISO8601DateFormatter().string(from: Date())
         )
     }
 }
@@ -76,9 +76,9 @@ extension Collaborator {
         Collaborator(
             id: UUID(uuidString: "00000000-0000-0000-0000-000000000001")!,
             project_id: UUID(uuidString: "00000000-0000-0000-0000-000000000001")!, // Project 1
-            role: "Owner",
-            joined_at: ISO8601DateFormatter().string(from: Date().addingTimeInterval(-86400)),
             user: User.mockBob,
+            role: Collaborator.Role.collaborator,
+            joined_at: ISO8601DateFormatter().string(from: Date().addingTimeInterval(-86400)),
             checkins: [Checkin.mockCheckinBobProject1]
         )
     }
@@ -87,9 +87,9 @@ extension Collaborator {
         Collaborator(
             id: UUID(uuidString: "00000000-0000-0000-0000-000000000002")!,
             project_id: UUID(uuidString: "00000000-0000-0000-0000-000000000002")!, // Project 2
-            role: "Owner",
-            joined_at: ISO8601DateFormatter().string(from: Date().addingTimeInterval(-172800)),
             user: User.mockAlice,
+            role: Collaborator.Role.collaborator,
+            joined_at: ISO8601DateFormatter().string(from: Date().addingTimeInterval(-172800)),
             checkins: [Checkin.mockCheckinAliceProject2]
         )
     }
@@ -98,9 +98,9 @@ extension Collaborator {
         Collaborator(
             id: UUID(uuidString: "00000000-0000-0000-0000-000000000003")!,
             project_id: UUID(uuidString: "00000000-0000-0000-0000-000000000001")!, // Project 1
-            role: "Collaborator",
-            joined_at: ISO8601DateFormatter().string(from: Date().addingTimeInterval(-432000)),
             user: User.mockCharlie,
+            role: Collaborator.Role.collaborator,
+            joined_at: ISO8601DateFormatter().string(from: Date().addingTimeInterval(-432000)),
             checkins: []
         )
     }
@@ -111,7 +111,7 @@ extension Project {
     static var mockProject1: Project {
         Project(
             id: UUID(uuidString: "00000000-0000-0000-0000-000000000001")!,
-            name: "Project 1",
+            title: "Project 1",
             description: "A sample project for previewing. This is the description to Project 1.",
             created_by: User.mockBob,
             created_at: ISO8601DateFormatter().string(from: Date().addingTimeInterval(-604800)),
@@ -122,7 +122,7 @@ extension Project {
     static var mockProject2: Project {
         Project(
             id: UUID(uuidString: "00000000-0000-0000-0000-000000000002")!,
-            name: "Project 2",
+            title: "Project 2",
             description: "Another sample project with a different focus. This is the description to Project 2.",
             created_by: User.mockAlice,
             created_at: ISO8601DateFormatter().string(from: Date().addingTimeInterval(-1209600)),
@@ -133,14 +133,17 @@ extension Project {
 
 // MARK: - MockHelpers
 struct MockFunctions {
-    static func mockHasCheckedInToday(_ checkins: [Checkin]) -> Bool {
-        let isoFormatter = ISO8601DateFormatter()
-        let today = Calendar.current.startOfDay(for: Date())
-        return checkins.contains { checkin in
-            if let date = isoFormatter.date(from: checkin.datetime) {
-                return Calendar.current.isDate(date, inSameDayAs: today)
-            }
-            return false
-        }
+    static func mockCheckIn(project: Project) {
+        print("Mock Checked in, update supabase")
     }
+    
+    static func mockUnCheckIn(project: Project) {
+        print("Mock Un Checked in, update supabase")
+    }
+    
+    static let mockGetCurrentUserID: () -> UUID? = {
+        // Replace this with a consistent mock UUID for testing
+        UUID(uuidString: "12345678-1234-5678-1234-567812345678")
+    }
+    
 }

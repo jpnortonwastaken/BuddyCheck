@@ -10,6 +10,7 @@ import SwiftUI
 struct UserHeaderView: View {
     let user: User
     let logoutAction: () -> Void
+    @State private var showLogoutConfirmation = false
     
     var body: some View {
         VStack {
@@ -35,9 +36,15 @@ struct UserHeaderView: View {
                     paddingHorizontal: 16,
                     paddingVertical: 6,
                     action: {
-                        logoutAction()
+                        showLogoutConfirmation = true
                     }
                 )
+            }
+        }
+        .alert("Are you sure you want to log out?", isPresented: $showLogoutConfirmation) {
+            Button("Cancel", role: .cancel) { }
+            Button("Log Out", role: .destructive) {
+                logoutAction()
             }
         }
     }
@@ -47,7 +54,7 @@ struct UserHeaderView: View {
     UserHeaderView(
         user: User.mockAlice,
         logoutAction: {
-            print("Logout pressed")
+            print("Logout confirmed")
         }
     )
     .padding(.horizontal, 20)
