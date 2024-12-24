@@ -40,7 +40,7 @@ struct MainView: View {
                 .background(Color.customDynamicBackgroundColor)
             } else {
                 // Project List
-                ScrollView {
+                ScrollView(.vertical, showsIndicators: false) {
                     VStack(spacing: 24) {
                         // 2) If we've loaded and there's nothing, show an empty state
                         if viewModel.projects.isEmpty {
@@ -75,6 +75,7 @@ struct MainView: View {
                             }
                         }
                     }
+                    .padding(.bottom, 200)
                     .padding(.top, 16)
                     .frame(maxWidth: .infinity)
                 }
