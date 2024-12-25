@@ -15,12 +15,38 @@ struct ProjectView: View {
     
     @State private var isCheckedIn = false
     
+    var streakText: String {
+        let streak = calculateProjectStreak(collaborators: project.collaborators)
+        return "\(streak)"
+    }
+    
+    var isTodayComplete: Bool {
+        let totalCollaborators = project.collaborators.count
+        let todayCheckins = project.collaborators.filter { hasCheckedInToday($0.checkins) }.count
+        return todayCheckins == totalCollaborators
+    }
+    
     var body: some View {
         VStack(alignment: .leading, spacing: 20) {
             VStack(alignment: .leading) {
-                Text(project.title)
-                    .font(.title2)
-                    .bold()
+                HStack {
+                    Text(project.title)
+                        .font(.title2)
+                        .bold()
+                    
+                    Spacer()
+                    
+                    if let streak = Int(streakText), streak > 0 {
+                        Text("\(streakText)")
+                            .font(.system(size: 14, weight: .semibold, design: .default))
+                            .foregroundColor(isTodayComplete ? Color.white : Color.customGreyColorTextStrong)
+                            .padding(.horizontal, 10)
+                            .padding(.vertical, 6)
+                            .frame(minWidth: 30, minHeight: 30)
+                            .background(isTodayComplete ? Color.orange : Color.customGreyColorSuperWeak)
+                            .cornerRadius(.infinity)
+                    }
+                }
                 
                 if let desc = project.description {
                     Text(desc)
@@ -117,6 +143,53 @@ struct ProjectView: View {
             }
             return false
         }
+    }
+    
+    func calculateProjectStreak(collaborators: [Collaborator]) -> Int {
+        let calendar = Calendar.current
+        var dailyCheckinCounts: [Date: Int] = [:]
+
+        // Collect all check-ins for the project, grouped by day
+        for collaborator in collaborators {
+            for checkin in collaborator.checkins {
+                if let checkinDate = ISO8601DateFormatter().date(from: checkin.created_at) {
+                    let day = calendar.startOfDay(for: checkinDate)
+                    dailyCheckinCounts[day, default: 0] += 1
+                }
+            }
+        }
+
+        // Sort the days with check-ins
+        let sortedDays = dailyCheckinCounts.keys.sorted(by: >)
+        let totalCollaborators = collaborators.count
+        let today = calendar.startOfDay(for: Date())
+        var streak = 0
+        var currentDay = calendar.date(byAdding: .day, value: -1, to: today)!
+
+        // Check if today is completed
+        if dailyCheckinCounts[today] == totalCollaborators {
+            streak += 1
+        }
+
+        // Calculate streak for previous days
+        for day in sortedDays {
+            // Skip today as it was already checked
+            if calendar.isDate(day, inSameDayAs: today) {
+                continue
+            }
+
+            // Check if the day matches the current streak day
+            if calendar.isDate(day, inSameDayAs: currentDay) {
+                if dailyCheckinCounts[day] == totalCollaborators {
+                    streak += 1
+                    currentDay = calendar.date(byAdding: .day, value: -1, to: currentDay)!
+                } else {
+                    break
+                }
+            }
+        }
+
+        return streak
     }
 }
 
