@@ -68,4 +68,24 @@ extension Color {
     static let customRedQuaternary = Color(
         UIColor.systemRed.withAlphaComponent(0.2)
     )
+        
+    static let customSuperLightOrange = Color(
+        lightMode: UIColor.orange,
+        darkMode: UIColor(
+            red: 1.0,
+            green: 0.8,
+            blue: 0.6,
+            alpha: 1.0
+        )
+    )
+}
+
+#Preview {
+    VStack(spacing: 20) {
+        StreakBadgeView(streakText: "5", isTodayComplete: true)
+        StreakBadgeView(streakText: "0", isTodayComplete: false)
+    }
+    .padding(50)
+    .background(Color.customDynamicBackgroundColor)
+    .cornerRadius(30)
 }

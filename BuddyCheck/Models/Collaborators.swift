@@ -5,14 +5,22 @@
 //  Created by JP Norton on 12/18/24.
 //
 
-
 import Foundation
 
+// MARK: - Collaborator Model
+
+/// Represents a collaborator in a project.
 struct Collaborator: Identifiable, Codable, Hashable {
+    
+    // MARK: - Nested Types
+    
+    /// The role of the collaborator in the project.
     enum Role: String, Codable {
         case owner = "Owner"
         case collaborator = "Collaborator"
     }
+    
+    // MARK: - Properties
     
     var id: UUID
     var project_id: UUID
@@ -21,17 +29,21 @@ struct Collaborator: Identifiable, Codable, Hashable {
     var joined_at: String
     var checkins: [Checkin]
     
-    // CodingKeys for mapping JSON fields to struct properties
-    enum CodingKeys: String, CodingKey {
+    // MARK: - CodingKeys
+    
+    /// Maps the JSON keys to the struct properties for decoding/encoding.
+    private enum CodingKeys: String, CodingKey {
         case id
-        case project_id
+        case project_id = "project_id"
         case user
         case role
-        case joined_at
+        case joined_at = "joined_at"
         case checkins
     }
-
-    // Custom init for decoding
+    
+    // MARK: - Initializers
+    
+    /// Custom initializer for decoding JSON.
     init(from decoder: Decoder) throws {
         let container = try decoder.container(keyedBy: CodingKeys.self)
         id = try container.decode(UUID.self, forKey: .id)
@@ -42,7 +54,7 @@ struct Collaborator: Identifiable, Codable, Hashable {
         checkins = try container.decodeIfPresent([Checkin].self, forKey: .checkins) ?? [] // Default to empty array
     }
     
-    // Reintroduce the memberwise initializer
+    /// Memberwise initializer for creating collaborators programmatically.
     init(
         id: UUID,
         project_id: UUID,

@@ -8,7 +8,13 @@
 
 import Foundation
 
+// MARK: - User Model
+
+/// Represents a user in the BuddyCheck app.
 struct User: Identifiable, Codable, Hashable {
+    
+    // MARK: - Properties
+    
     var id: UUID
     var name: String
     var email: String

@@ -10,15 +10,23 @@ import SwiftUI
 
 @main
 struct BuddyCheckApp: App {
-    @StateObject var viewModel = MainViewModel()
+    
+    // MARK: - Properties (1)
+    
+    /// Create a shared instance of the MainViewModel to manage app-wide state
+    @StateObject private var viewModel = MainViewModel()
+    
+    // MARK: - Body
     
     var body: some Scene {
         WindowGroup {
-            ProtectorView(viewModel: viewModel)
+            EntryView(viewModel: viewModel) // Inject the ViewModel
                 .onOpenURL { url in
+                    // Handle incoming URLs, such as Google Sign-In callbacks
                     GIDSignIn.sharedInstance.handle(url)
                 }
                 .onAppear {
+                    // Restore the previous user session, if available
                     viewModel.restorePreviousSignIn()
                 }
         }

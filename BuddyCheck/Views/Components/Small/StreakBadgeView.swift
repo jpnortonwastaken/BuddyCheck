@@ -63,5 +63,4 @@ struct StreakBadgeView: View {
     .padding(50)
     .background(Color.customDynamicBackgroundColor)
     .cornerRadius(30)
-    .previewLayout(.sizeThatFits)
 }

@@ -292,6 +292,8 @@ class MainViewModel: ObservableObject {
     }
     
     func checkIn(project: Project) async {
+        //try? await Task.sleep(nanoseconds: 5_000_000_000) // Simulate async work
+
         guard let userID = currentUser?.id else {
             print("❌ User not signed in.")
             return
@@ -354,6 +356,8 @@ class MainViewModel: ObservableObject {
     }
     
     func unCheckIn(project: Project) async {
+        //try? await Task.sleep(nanoseconds: 5_000_000_000) // Simulate async work
+        
         guard let userID = currentUser?.id else {
             print("❌ User not signed in.")
             return

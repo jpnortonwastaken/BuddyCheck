@@ -5,10 +5,15 @@
 //  Created by JP Norton on 12/18/24.
 //
 
-
 import Foundation
 
+// MARK: - Project Model
+
+/// Represents a project in the BuddyCheck app.
 struct Project: Identifiable, Codable, Hashable {
+    
+    // MARK: - Properties
+    
     var id: UUID
     var title: String
     var description: String?
@@ -16,17 +21,21 @@ struct Project: Identifiable, Codable, Hashable {
     var created_at: String
     var collaborators: [Collaborator]
     
-    // CodingKeys for mapping JSON fields to struct properties
-    enum CodingKeys: String, CodingKey {
+    // MARK: - CodingKeys
+    
+    /// Maps the JSON keys to the struct properties for decoding/encoding.
+    private enum CodingKeys: String, CodingKey {
         case id
         case title
         case description
-        case created_by
-        case created_at
+        case created_by = "created_by"
+        case created_at = "created_at"
         case collaborators
     }
-
-    // Custom init for decoding
+    
+    // MARK: - Initializers
+    
+    /// Custom initializer for decoding JSON.
     init(from decoder: Decoder) throws {
         let container = try decoder.container(keyedBy: CodingKeys.self)
         id = try container.decode(UUID.self, forKey: .id)
@@ -37,11 +46,11 @@ struct Project: Identifiable, Codable, Hashable {
         collaborators = try container.decodeIfPresent([Collaborator].self, forKey: .collaborators) ?? [] // Default to empty array
     }
     
-    // Reintroduce the memberwise initializer
+    /// Custom memberwise initializer for creating projects programmatically.
     init(
         id: UUID,
         title: String,
-        description: String?,
+        description: String? = nil,
         created_by: User,
         created_at: String,
         collaborators: [Collaborator] = []
