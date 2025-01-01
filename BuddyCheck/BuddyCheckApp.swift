@@ -20,7 +20,8 @@ struct BuddyCheckApp: App {
     
     var body: some Scene {
         WindowGroup {
-            EntryView(viewModel: viewModel) // Inject the ViewModel
+            EntryView() // Inject the ViewModel
+                .environmentObject(viewModel)
                 .onOpenURL { url in
                     // Handle incoming URLs, such as Google Sign-In callbacks
                     GIDSignIn.sharedInstance.handle(url)

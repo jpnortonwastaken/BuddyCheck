@@ -12,7 +12,7 @@ struct EntryView: View {
     // MARK: - Properties (1)
     
     /// The shared MainViewModel instance.
-    @ObservedObject var viewModel: MainViewModel
+    @EnvironmentObject var viewModel: MainViewModel
     
     // MARK: - Computed Properties (2)
     
@@ -41,9 +41,11 @@ struct EntryView: View {
                 } else {
                     // Show the main app view or login screen based on user authentication
                     if hasCurrentUser {
-                        MainView(viewModel: viewModel)
+                        MainView()
+                            .environmentObject(viewModel)
                     } else {
-                        LoginView(viewModel: viewModel)
+                        LoginView()
+                            .environmentObject(viewModel)
                     }
                 }
             }
@@ -72,5 +74,6 @@ private extension View {
     testViewModel.currentUser = nil // Set to User.mockAlice to test a logged-in state
     testViewModel.projects = [Project.mockProject1, Project.mockProject2]
     
-    return EntryView(viewModel: testViewModel)
+    return EntryView()
+            .environmentObject(testViewModel)
 }

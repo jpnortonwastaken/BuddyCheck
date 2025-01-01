@@ -45,6 +45,7 @@ struct CustomButton: View {
             .background(backgroundColor)
             .cornerRadius(cornerRadius)
             .scaleEffect(isPressed ? 0.9 : 1.0)
+            //.animation(.easeInOut(duration: 0.2), value: text) // smooth text transition
             .pressEvents {
                 if !hasTriggeredHaptic {
                     hapticType.map(HapticManager.trigger)

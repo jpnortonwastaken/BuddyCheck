@@ -13,7 +13,7 @@ struct LoginView: View {
     // MARK: - Properties (1)
     
     /// The shared MainViewModel instance.
-    @ObservedObject var viewModel: MainViewModel
+    @EnvironmentObject var viewModel: MainViewModel
     
     // MARK: - Body
     
@@ -125,5 +125,6 @@ private func getVisibleViewController(from vc: UIViewController) -> UIViewContro
     let testViewModel = MainViewModel()
     testViewModel.currentUser = nil // Set to User.mockAlice to test a logged-in state
     
-    return LoginView(viewModel: testViewModel)
+    return LoginView()
+            .environmentObject(testViewModel)
 }

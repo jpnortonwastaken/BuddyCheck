@@ -12,7 +12,7 @@ struct MainView: View {
     // MARK: - Properties (3)
     
     /// The shared MainViewModel instance.
-    @ObservedObject var viewModel: MainViewModel
+    @EnvironmentObject var viewModel: MainViewModel
     
     /// Tracks whether we’ve **loaded** the projects at least once.
     @State private var hasLoadedProjects = false
@@ -112,5 +112,6 @@ struct MainView: View {
     testViewModel.currentUser = User.mockAlice // Set to nil to test a logged-out state
     testViewModel.projects = [Project.mockProject1, Project.mockProject2]
     
-    return MainView(viewModel: testViewModel)
+    return MainView()
+            .environmentObject(testViewModel)
 }
