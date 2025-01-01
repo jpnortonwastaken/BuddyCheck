@@ -9,14 +9,14 @@ import SwiftUI
 
 struct ProjectView: View {
     
-    // MARK: - Properties (5)
+    // MARK: - Properties (4)
+    
+    @EnvironmentObject var viewModel: MainViewModel
     
     let project: Project
-    let checkIn: (Project) -> Void
-    let unCheckIn: (Project) -> Void
-    let getCurrentUserID: () -> UUID?
     
     @State private var isCheckedIn = false
+    @State private var isLoading = false  // track button loading state
     
     // MARK: - Computed Properties (2)
     
@@ -88,29 +88,54 @@ struct ProjectView: View {
     
     private var checkInOutButton: some View {
         CustomButton(
-            text: isCheckedIn ? "Uncheck In" : "Check In",
-            foregroundColor: isCheckedIn ? Color.customGreyColorTextStrong : Color.customButtonTextColor,
-            backgroundColor: isCheckedIn ? Color.customGreyColorSuperWeak : Color.customButtonBackgroundColor,
+            text: isLoading
+                ? "Loading..."
+                : (isCheckedIn ? "Uncheck In" : "Check In"),
+            
+            foregroundColor:
+                //isLoading ? .gray :
+                (isCheckedIn
+                    ? Color.customGreyColorTextStrong
+                    : Color.customButtonTextColor),
+            
+            backgroundColor:
+                //isLoading ? Color.secondary :
+                (isCheckedIn
+                    ? Color.customGreyColorSuperWeak
+                    : Color.customButtonBackgroundColor),
+            
             cornerRadius: 20,
             paddingVertical: 16,
             fullWidth: true,
-            action: handleCheckIn
+            
+            // Optionally disable the button while loading
+            action: handleCheckInOut
         )
+        .disabled(isLoading)
     }
     
     // MARK: - Actions (2)
     
-    private func handleCheckIn() {
-        if isCheckedIn {
-            unCheckIn(project)
-        } else {
-            checkIn(project)
+    private func handleCheckInOut() {
+        // Toggle the loading state on immediately so the UI updates
+        isLoading = true
+        
+        Task {
+            if isCheckedIn {
+                await viewModel.unCheckIn(project: project)
+                isCheckedIn = false
+            } else {
+                await viewModel.checkIn(project: project)
+                isCheckedIn = true
+            }
+            
+            // Done loading
+            isLoading = false
         }
-        isCheckedIn.toggle()
     }
     
     private func initializeCheckInState() {
-        if let userId = getCurrentUserID() {
+        if let userId = viewModel.getCurrentUserID() {
             isCheckedIn = project.collaborators.contains { collaborator in
                 collaborator.user.id == userId && hasCheckedInToday(collaborator.checkins)
             }
@@ -140,11 +165,13 @@ struct ProjectView: View {
 // MARK: - Previews
 
 #Preview {
-    ProjectView(
-        project: Project.mockProject1,
-        checkIn: MockFunctions.mockCheckIn,
-        unCheckIn: MockFunctions.mockUnCheckIn,
-        getCurrentUserID: MockFunctions.mockGetCurrentUserID
-    )
-    .padding(16)
+    // Create a test view model
+    let testViewModel = MainViewModel()
+    // Optionally fill it with some test data:
+    testViewModel.currentUser = User.mockAlice
+    testViewModel.projects = [Project.mockProject1] // So we have something to show
+
+    return ProjectView(project: Project.mockProject1)
+        .environmentObject(testViewModel)
+        .padding(16)
 }

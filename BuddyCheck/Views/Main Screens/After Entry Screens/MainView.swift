@@ -51,7 +51,7 @@ struct MainView: View {
         }
     }
     
-    // MARK: - Subviews (4)
+    // MARK: - Subviews (3)
     
     /// Header showing the user's information and logout option.
     private func userHeader(user: User) -> some View {
@@ -68,7 +68,8 @@ struct MainView: View {
                     emptyState
                 } else {
                     ForEach(viewModel.projects) { project in
-                        projectView(for: project)
+                        ProjectView(project: project)
+                            .environmentObject(viewModel)
                     }
                 }
             }
@@ -80,26 +81,6 @@ struct MainView: View {
         .refreshable {
             await fetchProjects(initialLoad: false)
         }
-    }
-    
-    /// Single project view.
-    private func projectView(for project: Project) -> some View {
-        ProjectView(
-            project: project,
-            checkIn: { project in
-                Task {
-                    await viewModel.checkIn(project: project)
-                }
-            },
-            unCheckIn: { project in
-                Task {
-                    await viewModel.unCheckIn(project: project)
-                }
-            },
-            getCurrentUserID: {
-                viewModel.getCurrentUserID()
-            }
-        )
     }
     
     /// View to display when there are no projects.

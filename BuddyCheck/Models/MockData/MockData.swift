@@ -129,11 +129,13 @@ extension Project {
 // MARK: - Mock Helpers
 
 struct MockFunctions {
-    static func mockCheckIn(project: Project) {
+    static func mockCheckIn(project: Project) async {
+        //try? await Task.sleep(nanoseconds: 5_000_000_000) // Simulate async work
         print("Mock Checked In for project: \(project.title)")
     }
     
-    static func mockUnCheckIn(project: Project) {
+    static func mockUnCheckIn(project: Project) async {
+        //try? await Task.sleep(nanoseconds: 5_000_000_000) // Simulate async work
         print("Mock Unchecked In for project: \(project.title)")
     }
     
