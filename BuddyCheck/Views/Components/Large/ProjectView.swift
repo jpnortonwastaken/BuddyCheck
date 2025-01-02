@@ -9,7 +9,7 @@ import SwiftUI
 
 struct ProjectView: View {
     
-    // MARK: - Properties (4)
+    // MARK: - Properties (6)
     
     @EnvironmentObject var viewModel: MainViewModel
     
@@ -17,6 +17,9 @@ struct ProjectView: View {
     
     @State private var isCheckedIn = false
     @State private var isLoading = false  // track button loading state
+    
+    @State private var rippleOrigin: CGPoint = .zero
+    @State private var rippleTrigger: Int = 0
     
     // MARK: - Computed Properties (2)
     
@@ -45,6 +48,12 @@ struct ProjectView: View {
         .padding(.vertical, 16)
         .background(Color.customGreyColorBackground)
         .cornerRadius(20)
+        .coordinateSpace(name: "ProjectViewRipple")
+        .modifier(RippleEffect(at: rippleOrigin, trigger: rippleTrigger))
+        .onPressingChanged { point in
+            guard let point = point else { return }
+            rippleOrigin = point
+        }
         .onAppear(perform: initializeCheckInState)
     }
     
@@ -109,7 +118,12 @@ struct ProjectView: View {
             fullWidth: true,
             
             // Optionally disable the button while loading
-            action: handleCheckInOut
+            action: {
+                handleCheckInOut()
+                if (isCheckedIn == false) {
+                    rippleTrigger += 1
+                }
+            }
         )
         .disabled(isLoading)
     }
@@ -131,6 +145,8 @@ struct ProjectView: View {
             
             // Done loading
             isLoading = false
+            
+            //rippleTrigger += 1
         }
     }
     

@@ -47,10 +47,6 @@ struct CustomButton: View {
             .scaleEffect(isPressed ? 0.9 : 1.0)
             //.animation(.easeInOut(duration: 0.2), value: text) // smooth text transition
             .pressEvents {
-                if !hasTriggeredHaptic {
-                    hapticType.map(HapticManager.trigger)
-                    hasTriggeredHaptic = true // Ensure haptic triggers only once
-                }
                 withAnimation(.spring(response: 0.4, dampingFraction: 0.5, blendDuration: 0)) {
                     isPressed = true
                 }
@@ -58,10 +54,13 @@ struct CustomButton: View {
                 withAnimation(.spring(response: 0.4, dampingFraction: 0.5, blendDuration: 0)) {
                     isPressed = false
                 }
+                if !hasTriggeredHaptic {
+                    hapticType.map(HapticManager.trigger)
+                    hasTriggeredHaptic = true // Ensure haptic triggers only once
+                }
                 hasTriggeredHaptic = false // Reset haptic flag for next press
                 action()
             }
-
     }
 }
 
