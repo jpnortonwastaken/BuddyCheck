@@ -153,7 +153,7 @@ extension MainViewModel {
     /// Performs a "check-in" for the specified project, if the user has not already checked in today.
     func checkIn(project: Project) async {
         // Simulate a wait for demonstration
-        //try? await Task.sleep(nanoseconds: 5_000_000_000)
+        try? await Task.sleep(nanoseconds: 5_000_000_000)
         
         guard let userID = currentUser?.id else {
             print("❌ User not signed in.")
@@ -217,7 +217,7 @@ extension MainViewModel {
     /// Performs an "un-check-in" for the specified project, if a check-in exists today.
     func unCheckIn(project: Project) async {
         // Simulate a wait for demonstration
-        //try? await Task.sleep(nanoseconds: 5_000_000_000)
+        try? await Task.sleep(nanoseconds: 5_000_000_000)
 
         guard let userID = currentUser?.id else {
             print("❌ User not signed in.")
