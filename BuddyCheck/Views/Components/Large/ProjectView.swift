@@ -9,7 +9,7 @@ import SwiftUI
 
 struct ProjectView: View {
     
-    // MARK: - Properties (6)
+    // MARK: - Properties (7)
     
     @EnvironmentObject var viewModel: MainViewModel
     
@@ -20,6 +20,8 @@ struct ProjectView: View {
     
     @State private var rippleOrigin: CGPoint = .zero
     @State private var rippleTrigger: Int = 0
+    
+    @State private var showUncheckAlert = false
     
     // MARK: - Computed Properties (2)
     
@@ -119,13 +121,24 @@ struct ProjectView: View {
             
             // Optionally disable the button while loading
             action: {
-                handleCheckInOut()
-                if (isCheckedIn == false) {
+                if isCheckedIn {
+                    // Show confirmation dialog
+                    showUncheckAlert = true
+                } else {
                     rippleTrigger += 1
+                    handleCheckInOut()
                 }
             }
         )
         .disabled(isLoading)
+        .alert("Are you sure you want to uncheck in?",
+            isPresented: $showUncheckAlert
+        ) {
+            Button("Uncheck In", role: .destructive) {
+                handleCheckInOut()
+            }
+            Button("Cancel", role: .cancel) {}
+        }
     }
     
     // MARK: - Actions (2)

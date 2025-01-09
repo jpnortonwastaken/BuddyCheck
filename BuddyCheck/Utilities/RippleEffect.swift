@@ -22,23 +22,30 @@ struct RippleEffect<T: Equatable>: ViewModifier {
     }
     
     func body(content: Content) -> some View {
-        let duration = duration
-        let origin = origin
-        
-        content.keyframeAnimator(
-            initialValue: 0,
-            trigger: trigger
-        ) { view, elapsedTime in
-            view.modifier(
-                RippleModifier(
-                    origin: origin,
-                    elapsedTime: elapsedTime,
-                    duration: duration
-                )
+        if #available(iOS 18.0, *) {
+            let duration = self.duration
+            let origin = self.origin
+
+            return AnyView(
+                content.keyframeAnimator(
+                    initialValue: 0,
+                    trigger: trigger
+                ) { view, elapsedTime in
+                    view.modifier(
+                        RippleModifier(
+                            origin: origin,
+                            elapsedTime: elapsedTime,
+                            duration: duration
+                        )
+                    )
+                } keyframes: { _ in
+                    MoveKeyframe(0)
+                    LinearKeyframe(duration, duration: duration)
+                }
             )
-        } keyframes: { _ in
-            MoveKeyframe(0)
-            LinearKeyframe(duration, duration: duration)
+        } else {
+            // Fallback for earlier iOS versions
+            return AnyView(content)
         }
     }
     
