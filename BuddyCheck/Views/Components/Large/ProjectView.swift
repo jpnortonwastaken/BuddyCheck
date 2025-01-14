@@ -39,24 +39,44 @@ struct ProjectView: View {
     // MARK: - Body
     
     var body: some View {
-        VStack(alignment: .leading, spacing: 20) {
-            headerView
-            
-            collaboratorsView
-            
-            checkInOutButton
+        if #available(iOS 18.0, *) {
+            VStack(alignment: .leading, spacing: 20) {
+                headerView
+                
+                collaboratorsView
+                
+                checkInOutButton
+            }
+            .padding(.horizontal, 20)
+            .padding(.vertical, 16)
+            .background(Color.customGreyColorBackground)
+            .cornerRadius(20)
+            .coordinateSpace(name: "ProjectViewRipple")
+            .modifier(RippleEffect(at: rippleOrigin, trigger: rippleTrigger))
+            .onPressingChanged { point in
+                guard let point = point else { return }
+                rippleOrigin = point
+            }
+            .onAppear(perform: initializeCheckInState)
+        } else {
+            VStack(alignment: .leading, spacing: 20) {
+                headerView
+                
+                collaboratorsView
+                
+                checkInOutButton
+            }
+            .padding(.horizontal, 20)
+            .padding(.vertical, 16)
+            .background(Color.customGreyColorBackground)
+            .cornerRadius(20)
+            .coordinateSpace(name: "ProjectViewRipple")
+            .onPressingChanged { point in
+                guard let point = point else { return }
+                rippleOrigin = point
+            }
+            .onAppear(perform: initializeCheckInState)
         }
-        .padding(.horizontal, 20)
-        .padding(.vertical, 16)
-        .background(Color.customGreyColorBackground)
-        .cornerRadius(20)
-        .coordinateSpace(name: "ProjectViewRipple")
-        .modifier(RippleEffect(at: rippleOrigin, trigger: rippleTrigger))
-        .onPressingChanged { point in
-            guard let point = point else { return }
-            rippleOrigin = point
-        }
-        .onAppear(perform: initializeCheckInState)
     }
     
     // MARK: - Views (3)
