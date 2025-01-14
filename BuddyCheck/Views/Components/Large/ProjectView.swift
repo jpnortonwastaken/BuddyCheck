@@ -71,10 +71,11 @@ struct ProjectView: View {
             .background(Color.customGreyColorBackground)
             .cornerRadius(20)
             .coordinateSpace(name: "ProjectViewRipple")
-            .onPressingChanged { point in
-                guard let point = point else { return }
-                rippleOrigin = point
-            }
+    //        .modifier(RippleEffect(at: rippleOrigin, trigger: rippleTrigger))
+    //        .onPressingChanged { point in
+    //            guard let point = point else { return }
+    //            rippleOrigin = point
+    //        }
             .onAppear(perform: initializeCheckInState)
         }
     }
@@ -121,7 +122,7 @@ struct ProjectView: View {
         CustomButton(
             text: isLoading
                 ? "Loading..."
-                : (isCheckedIn ? "Uncheck In" : "Check In"),
+                : (isCheckedIn ? "Undo Check In" : "Check In"),
             
             foregroundColor:
                 //isLoading ? .gray :
@@ -151,10 +152,10 @@ struct ProjectView: View {
             }
         )
         .disabled(isLoading)
-        .alert("Are you sure you want to uncheck in?",
+        .alert("Are you sure you want to undo your check in?",
             isPresented: $showUncheckAlert
         ) {
-            Button("Uncheck In", role: .destructive) {
+            Button("Undo", role: .destructive) {
                 handleCheckInOut()
             }
             Button("Cancel", role: .cancel) {}
